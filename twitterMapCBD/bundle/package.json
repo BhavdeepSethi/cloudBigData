@@ -1,0 +1,11 @@
+{
+  "name": "TweetMap",
+  "version": "0.0.1",
+  "scripts": {
+    "start": "node main.js"
+  },
+  "dependencies": {
+    "fibers": "1.0.1",
+    "forever": "*"
+  }
+}
