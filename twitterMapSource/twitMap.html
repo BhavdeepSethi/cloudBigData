@@ -1,0 +1,55 @@
+<head>
+  <title>Google Maps</title>
+<script type="text/javascript"
+  src="https://maps.googleapis.com/maps/api/js?libraries=visualization&sensor=true_or_false"> 
+</script>
+
+
+</head>
+
+<body>
+
+ <div class="container">
+    <header>
+      <h1>Tweet Count: {{tweets}}</h1>
+<label class="hide-completed">
+Tweet List:
+<select name="tweetType">
+  <option value="apple">Apple</option>
+  <option value="samsung">Samsung</option>
+  <option value="manutd">Manchester United</option>
+  <option value="love">Love</option>
+  <option value="facebook">Facebook</option>
+  <option value="friends">Friends</option>
+</select>  
+<input type="checkbox" checked="{{hideCompleted}}" />
+</label>
+    </header>
+
+<div id="panel">
+      <button onclick="toggleHeatmap()">Toggle Heatmap</button>
+      <button onclick="changeGradient()">Change gradient</button>
+      <button onclick="changeRadius()">Change radius</button>
+      <button onclick="changeOpacity()">Change opacity</button>
+    </div>
+ 
+
+  {{> mapPostsList }}
+  </div>
+
+ <div id="sample" style="display:block">
+  {{tweet}}
+  </div>
+
+</body>
+
+<template name="mapPostsList">
+  <div id="map">
+    <div id="map-canvas" style="height:500px;margin:10px auto"></div>
+   </div>
+</template>
+
+<template name="taskTemp">
+  <li>{{text}}</li>
+</template>
+
