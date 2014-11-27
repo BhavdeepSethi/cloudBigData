@@ -15,7 +15,16 @@
       {{#if tweets.sentiment }}
           <span class="pos">{{tweets.pos}} </span> + 
           <span class="neg">{{tweets.neg}} </span> =
-          {{tweets.total}}
+          {{tweets.total}}, 
+          Overall Sentiment: 
+          {{#if tweets.overallPos }}
+              <span class="pos">Positive</span>
+          {{else}} {{#if tweets.overallNeg }}
+              <span class="neg">Negative</span>
+              {{else}}
+                    <span>Neutral</span>
+              {{/if}}    
+          {{/if}}    
       {{else}}
           {{tweets.total}}
       {{/if}}    

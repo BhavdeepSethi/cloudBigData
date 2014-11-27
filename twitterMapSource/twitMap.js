@@ -105,7 +105,16 @@ Template.body.helpers({
     heatmap1.set('gradient', gradient1);  
     heatmap2.set('gradient', gradient2); 
     var totalCount = (posCount+negCount);
-    var totalCountObj = {pos: posCount, neg:negCount, total: totalCount, sentiment: true}    
+    var overallPos = false;
+    var overallNeg = false;    
+
+    if(posCount>negCount){
+      var overallPos = true;
+    }else if(posCount<negCount){
+      var overallNeg = true;
+    }
+
+    var totalCountObj = {pos: posCount, neg:negCount, total: totalCount, sentiment: true, overallPos: overallPos, overallNeg: overallNeg}    
   }else{
     heatmap1.set('gradient', null);  
     heatmap2.set('gradient', null);  
