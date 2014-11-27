@@ -1,7 +1,11 @@
 package edu.columbia.cbd.dao.impl;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import edu.columbia.cbd.models.Constants;
 import edu.columbia.cbd.models.Tweet;
 import edu.columbia.cbd.service.MongoService;
+import edu.columbia.cbd.service.SQSService;
 import edu.columbia.cbd.service.TweetFetcherService;
 import twitter4j.*;
 
@@ -12,9 +16,13 @@ import twitter4j.*;
 public class StatusListenerImpl implements StatusListener {
 
     private MongoService mongoService;
+    private SQSService sqsService;
+    private Gson gson;
 
     public StatusListenerImpl() {
         this.mongoService = new MongoService();
+        this.sqsService = new SQSService();
+        gson = new GsonBuilder().enableComplexMapKeySerialization().create();
     }
 
     @Override
@@ -31,8 +39,11 @@ public class StatusListenerImpl implements StatusListener {
                     tweet.setLatitude(latitude);
                     tweet.setLongitude(longitude);
                     tweet.setTrackName(keyword);
+                    tweet.setTweet(status.getText());
+                    String tweetJSON = gson.toJson(tweet);
                     System.out.println(geoLocation.getLatitude()+":"+geoLocation.getLongitude()+":"+keyword);
                     mongoService.addTweet(tweet);
+                    sqsService.sendMessage(Constants.TWITTER_QUEUE_URL, tweetJSON);
                 }
             }
         }else{

@@ -11,27 +11,15 @@
     <packaging>jar</packaging>
 
     <groupId>cbd</groupId>
-    <artifactId>data-fetcher</artifactId>
+    <artifactId>tweetWorkers</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <dependencies>
         <dependency>
-            <groupId>org.twitter4j</groupId>
-            <artifactId>twitter4j-core</artifactId>
-            <version>4.0.2</version>
+            <groupId>cbd</groupId>
+            <artifactId>dataFetcher</artifactId>
+            <version>1.0-SNAPSHOT</version>
         </dependency>
-        <dependency>
-            <groupId>org.twitter4j</groupId>
-            <artifactId>twitter4j-stream</artifactId>
-            <version>4.0.2</version>
-        </dependency>
-        <dependency>
-            <groupId>org.mongodb</groupId>
-            <artifactId>mongo-java-driver</artifactId>
-            <version>2.12.3</version>
-        </dependency>
-
-
     </dependencies>
 
     <build>

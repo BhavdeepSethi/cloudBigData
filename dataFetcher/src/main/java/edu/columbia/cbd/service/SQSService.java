@@ -37,7 +37,7 @@ public class SQSService {
     }
 
     public String createQueue(String queueName){
-        CreateQueueRequest createQueueRequest = new CreateQueueRequest("MyQueue");
+        CreateQueueRequest createQueueRequest = new CreateQueueRequest(queueName);
         return sqs.createQueue(createQueueRequest).getQueueUrl();
     }
 
@@ -57,11 +57,6 @@ public class SQSService {
     public List<Message> receiveMessage(String queueUrl ){
         ReceiveMessageRequest receiveMessageRequest = new ReceiveMessageRequest(queueUrl);
         return sqs.receiveMessage(receiveMessageRequest).getMessages();
-    }
-
-    public static void main(String[] args) {
-        SQSService sqsService = new SQSService();
-        sqsService.listQueues();
     }
 
 

@@ -13,6 +13,9 @@ public class Executor {
 
     public static void main(String[] args) {
         System.out.println("Starting now!");
+        BootStrap bootStrap = BootStrap.getInstance();
+        bootStrap.startUp();
+
         TweetFetcherService tweetFetcherService = new TweetFetcherService();
         tweetFetcherService.fetchTweets();
     }
