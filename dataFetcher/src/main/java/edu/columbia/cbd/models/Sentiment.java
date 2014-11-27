@@ -9,6 +9,10 @@ public class Sentiment {
     private SentimentLabel sentimentLabel;
     private double score;
 
+    public Sentiment(SentimentLabel sentimentLabel, double score) {
+        this.sentimentLabel = sentimentLabel;
+        this.score = score;
+    }
 
     public SentimentLabel getSentimentLabel() {
         return sentimentLabel;

@@ -37,8 +37,12 @@ public class MongoServiceImpl implements MongoService{
         return tweetDao.fetchTweets(trackName);
     }
 
-    public void addTweet(Tweet tweet){
-        tweetDao.addTweet(tweet);
+    public String addTweet(Tweet tweet){
+        return tweetDao.addTweet(tweet);
+    }
+
+    public void updateTweet(Tweet tweet){
+        tweetDao.updateTweet(tweet);
     }
    
 }

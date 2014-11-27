@@ -9,12 +9,29 @@ public class Tweet {
         this.tweetId = tweetId;
     }
 
+    private String id;
     private long tweetId;
     private String trackName;
     private double longitude;
     private double latitude;
     private String tweet;
     private Sentiment sentiment;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public Sentiment getSentiment() {
+        return sentiment;
+    }
+
+    public void setSentiment(Sentiment sentiment) {
+        this.sentiment = sentiment;
+    }
 
     public String getTweet() {
         return tweet;

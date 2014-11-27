@@ -11,5 +11,7 @@ public interface MongoService {
 
     List<Tweet> fetchTweets(String trackName);
 
-    void addTweet(Tweet tweet);
+    String addTweet(Tweet tweet);
+
+    void updateTweet(Tweet tweet);
 }

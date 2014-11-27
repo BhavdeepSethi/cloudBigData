@@ -3,6 +3,7 @@ package edu.columbia.cbd.dao.impl;
 import com.mongodb.*;
 import edu.columbia.cbd.dao.TweetDao;
 import edu.columbia.cbd.models.Tweet;
+import org.bson.types.ObjectId;
 
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -48,15 +49,33 @@ public class TweetDaoImpl implements TweetDao {
     }
 
     @Override
-    public void addTweet(Tweet tweet) {
+    public String addTweet(Tweet tweet) {
         DB db = mongoClient.getDB(DATABASE_NAME);
-        DBCollection table = db.getCollection(COLLECTION_NAME);
+        DBCollection collection = db.getCollection(COLLECTION_NAME);
         BasicDBObject document = new BasicDBObject();
 
         document.put("tweetId", tweet.getTweetId());
         document.put("latitude", tweet.getLatitude());
         document.put("longitude", tweet.getLongitude());
         document.put("trackName", tweet.getTrackName());
-        table.insert(document);
+        document.put("tweet", tweet.getTweet());
+        document.put("sentiment", tweet.getSentiment().getSentimentLabel().name());
+        document.put("score", tweet.getSentiment().getScore());
+
+        collection.insert(document);
+        ObjectId id = (ObjectId) document.get( "_id" );
+        return id.toString();
+    }
+
+    @Override
+    public void updateTweet(Tweet tweet){
+        DB db = mongoClient.getDB(DATABASE_NAME);
+        DBCollection collection = db.getCollection(COLLECTION_NAME);
+        BasicDBObject searchQuery = new BasicDBObject("id", tweet.getId());
+        BasicDBObject updateValues = new BasicDBObject();
+        updateValues.put("sentiment", tweet.getSentiment().getSentimentLabel().name());
+        updateValues.put("score", tweet.getSentiment().getScore());
+        BasicDBObject newDocument = new BasicDBObject("$set", updateValues);
+        collection.update(searchQuery, newDocument);
     }
 }

@@ -3,6 +3,7 @@ package edu.columbia.cbd.dao.impl;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import edu.columbia.cbd.models.Constants;
+import edu.columbia.cbd.models.Sentiment;
 import edu.columbia.cbd.models.Tweet;
 import edu.columbia.cbd.service.MongoService;
 import edu.columbia.cbd.service.SQSService;
@@ -11,6 +12,8 @@ import edu.columbia.cbd.service.impl.MongoServiceImpl;
 import edu.columbia.cbd.service.impl.SQSServiceImpl;
 import edu.columbia.cbd.service.impl.TweetFetcherServiceImpl;
 import twitter4j.*;
+
+import java.util.Random;
 
 /**
  * Created by bhavdeepsethi on 10/29/14.
@@ -31,6 +34,8 @@ public class StatusListenerImpl implements StatusListener {
     @Override
     public void onStatus(Status status) {
         GeoLocation geoLocation = status.getGeoLocation();
+        Random random = new Random();
+
         long tweetId = status.getId();
         if(null != geoLocation){
             double latitude = geoLocation.getLatitude();
@@ -43,9 +48,16 @@ public class StatusListenerImpl implements StatusListener {
                     tweet.setLongitude(longitude);
                     tweet.setTrackName(keyword);
                     tweet.setTweet(status.getText());
+                    if(random.nextInt()%2==0)
+                        tweet.setSentiment(new Sentiment(Sentiment.SentimentLabel.POSITIVE, 1));
+                    else
+                        tweet.setSentiment(new Sentiment(Sentiment.SentimentLabel.NEGATIVE, 1));
+                    String id = mongoService.addTweet(tweet);
+                    tweet.setTweet(id);
+
                     String tweetJSON = gson.toJson(tweet);
                     System.out.println(geoLocation.getLatitude()+":"+geoLocation.getLongitude()+":"+keyword);
-                    mongoService.addTweet(tweet);
+                    System.out.println();
                     sqsService.sendMessage(Constants.TWITTER_QUEUE_URL, tweetJSON);
                 }
             }
