@@ -67,7 +67,7 @@
                     <!-- MainClass in mainfest make a executable jar -->
                     <archive>
                         <manifest>
-                            <mainClass>edu.columbia.cbd.Executor</mainClass>
+                            <mainClass>edu.columbia.cbd.DataFetchExecutor</mainClass>
                         </manifest>
                     </archive>
 

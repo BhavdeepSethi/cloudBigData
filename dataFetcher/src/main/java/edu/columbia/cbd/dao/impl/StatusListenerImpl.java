@@ -7,6 +7,9 @@ import edu.columbia.cbd.models.Tweet;
 import edu.columbia.cbd.service.MongoService;
 import edu.columbia.cbd.service.SQSService;
 import edu.columbia.cbd.service.TweetFetcherService;
+import edu.columbia.cbd.service.impl.MongoServiceImpl;
+import edu.columbia.cbd.service.impl.SQSServiceImpl;
+import edu.columbia.cbd.service.impl.TweetFetcherServiceImpl;
 import twitter4j.*;
 
 /**
@@ -20,8 +23,8 @@ public class StatusListenerImpl implements StatusListener {
     private Gson gson;
 
     public StatusListenerImpl() {
-        this.mongoService = new MongoService();
-        this.sqsService = new SQSService();
+        this.mongoService = new MongoServiceImpl();
+        this.sqsService = new SQSServiceImpl();
         gson = new GsonBuilder().enableComplexMapKeySerialization().create();
     }
 
@@ -33,7 +36,7 @@ public class StatusListenerImpl implements StatusListener {
             double latitude = geoLocation.getLatitude();
             double longitude = geoLocation.getLongitude();
 
-            for (String keyword : TweetFetcherService.KEYWORDS){
+            for (String keyword : Constants.KEYWORDS){
                 if (status.getText().toLowerCase().contains(keyword)){
                     Tweet tweet = new Tweet(tweetId);
                     tweet.setLatitude(latitude);

@@ -7,4 +7,6 @@ public class Constants {
 
     public static String TWITTER_QUEUE_NAME = "twitterCBD";
     public static String TWITTER_QUEUE_URL = "";
+
+    public static String[] KEYWORDS;
 }
