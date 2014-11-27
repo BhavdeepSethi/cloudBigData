@@ -4,9 +4,10 @@
 *.pem
 *.git
 *.ebextensions/
-.ebextensions
+.ebextensions/
 .classpath
 .project
 .settings/
 target/
 *.zip
+app.config
