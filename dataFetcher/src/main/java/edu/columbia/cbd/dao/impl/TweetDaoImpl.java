@@ -59,8 +59,10 @@ public class TweetDaoImpl implements TweetDao {
         document.put("longitude", tweet.getLongitude());
         document.put("trackName", tweet.getTrackName());
         document.put("tweet", tweet.getTweet());
-        document.put("sentiment", tweet.getSentiment().getSentimentLabel().name());
-        document.put("score", tweet.getSentiment().getScore());
+        if(tweet.getSentiment()!=null) {
+            document.put("sentiment", tweet.getSentiment().getSentimentLabel().name());
+            document.put("score", tweet.getSentiment().getScore());
+        }
 
         collection.insert(document);
         ObjectId id = (ObjectId) document.get( "_id" );

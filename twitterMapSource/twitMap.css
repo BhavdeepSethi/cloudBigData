@@ -35,6 +35,14 @@ header {
   display: block;
 }
 
+.neg{
+color: #ff0000;
+}
+
+.pos{
+color: #0000ff;
+}
+
 h1 {
   font-size: 1.5em;
   margin: 0;
@@ -115,7 +123,7 @@ li.private {
   border-color: #ddd;
 }
 
-header .hide-completed {
+header .select-type {
   float: right;
 }
 

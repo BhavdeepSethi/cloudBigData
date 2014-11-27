@@ -48,17 +48,20 @@ public class StatusListenerImpl implements StatusListener {
                     tweet.setLongitude(longitude);
                     tweet.setTrackName(keyword);
                     tweet.setTweet(status.getText());
-                    if(random.nextInt()%2==0)
-                        tweet.setSentiment(new Sentiment(Sentiment.SentimentLabel.POSITIVE, 1));
-                    else
+
+                    if(random.nextInt()%2==0) {
+                        tweet.setSentiment(new Sentiment(Sentiment.SentimentLabel.POSITIVE, -1));
+                    }else {
                         tweet.setSentiment(new Sentiment(Sentiment.SentimentLabel.NEGATIVE, 1));
+                    }
+
                     String id = mongoService.addTweet(tweet);
                     tweet.setTweet(id);
 
                     String tweetJSON = gson.toJson(tweet);
                     System.out.println(geoLocation.getLatitude()+":"+geoLocation.getLongitude()+":"+keyword);
                     System.out.println();
-                    sqsService.sendMessage(Constants.TWITTER_QUEUE_URL, tweetJSON);
+                    //sqsService.sendMessage(Constants.TWITTER_QUEUE_URL, tweetJSON);
                 }
             }
         }else{

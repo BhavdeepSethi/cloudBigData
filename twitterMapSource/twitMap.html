@@ -11,8 +11,16 @@
 
  <div class="container">
     <header>
-      <h1>Tweet Count: {{tweets}}</h1>
-<label class="hide-completed">
+      <h1>Tweet Count: 
+      {{#if tweets.sentiment }}
+          <span class="pos">{{tweets.pos}} </span> + 
+          <span class="neg">{{tweets.neg}} </span> =
+          {{tweets.total}}
+      {{else}}
+          {{tweets.total}}
+      {{/if}}    
+      </h1>
+<label class="select-type">
 Tweet List:
 <select name="tweetType">
   <option value="apple">Apple</option>
@@ -22,13 +30,13 @@ Tweet List:
   <option value="facebook">Facebook</option>
   <option value="friends">Friends</option>
 </select>  
-<input type="checkbox" checked="{{hideCompleted}}" />
 </label>
     </header>
 
 <div id="panel">
-      <button onclick="toggleHeatmap()">Toggle Heatmap</button>
-      <button onclick="changeGradient()">Change gradient</button>
+      <label class="toggle-map"> <button >Toggle Sentiment Map</button> </label>
+      <button onclick="togglePosHeatmap()" style="{{toggleSentiment}}" >Toggle Positive Tweets</button>
+      <button onclick="toggleNegHeatmap()" style="{{toggleSentiment}}" >Toggle Negative Tweets</button>      
       <button onclick="changeRadius()">Change radius</button>
       <button onclick="changeOpacity()">Change opacity</button>
     </div>
