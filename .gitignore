@@ -3,3 +3,10 @@
 *.properties
 *.pem
 *.git
+*.ebextensions/
+.ebextensions
+.classpath
+.project
+.settings/
+target/
+*.zip

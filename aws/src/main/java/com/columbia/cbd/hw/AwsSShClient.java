@@ -6,6 +6,7 @@ import net.schmizz.sshj.common.IOUtils;
 import net.schmizz.sshj.connection.channel.direct.Session;
 import net.schmizz.sshj.transport.verification.PromiscuousVerifier;
 import net.schmizz.sshj.userauth.keyprovider.KeyProvider;
+import net.schmizz.sshj.xfer.FileSystemFile;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -74,6 +75,10 @@ public class AwsSShClient {
 
     }
 
+    public void scpFiles(String src) throws IOException {
+        ssh.newSCPFileTransfer().upload(new FileSystemFile(src), "");
+    }
+
     public String getKeyVerifier() {
         return keyVerifier;
     }
@@ -89,4 +94,5 @@ public class AwsSShClient {
     public String getKeyLoc() {
         return keyLoc;
     }
+
 }

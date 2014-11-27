@@ -13,6 +13,16 @@ public class Tweet {
     private String trackName;
     private double longitude;
     private double latitude;
+    private String tweet;
+    private Sentiment sentiment;
+
+    public String getTweet() {
+        return tweet;
+    }
+
+    public void setTweet(String tweet) {
+        this.tweet = tweet;
+    }
 
     public long getTweetId() {
         return tweetId;
