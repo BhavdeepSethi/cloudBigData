@@ -5,8 +5,6 @@ import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import com.amazonaws.services.sns.model.PublishRequest;
-import com.amazonaws.services.sns.model.PublishResult;
 import com.amazonaws.services.sqs.model.Message;
 import com.columbia.cbd.utils.HttpRequestHandler;
 import com.google.gson.Gson;

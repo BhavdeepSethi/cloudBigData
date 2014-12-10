@@ -12,3 +12,4 @@ target/
 *.zip
 app.config
 aws/aws.iml
+/bin/

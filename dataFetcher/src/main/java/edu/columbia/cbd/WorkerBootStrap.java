@@ -6,28 +6,24 @@ import edu.columbia.cbd.service.SQSService;
 import edu.columbia.cbd.service.impl.SNSServiceImpl;
 import edu.columbia.cbd.service.impl.SQSServiceImpl;
 
-/**
- * Created by bhavdeepsethi on 11/26/14.
- */
-public class BootStrap {
+public class WorkerBootStrap {
+	private static WorkerBootStrap instance = null;
 
-    private static BootStrap instance = null;
-
-    public synchronized static BootStrap getInstance() {
+    public synchronized static WorkerBootStrap getInstance() {
         if(instance == null) {
-            instance = new BootStrap();
+            instance = new WorkerBootStrap();
         }
         return instance;
     }
 
-    private BootStrap() {
+    private WorkerBootStrap() {
     }
 
     public void startUp(){
         SQSService sqsService = new SQSServiceImpl();
         Constants.TWITTER_QUEUE_URL =  sqsService.createQueue(Constants.TWITTER_QUEUE_NAME);
+        SNSService snsService = new SNSServiceImpl();
+        Constants.TWITTER_TOPIC_ARN = snsService.createTopic(Constants.TWITTER_TOPIC_NAME);
     }
-
-
 
 }
