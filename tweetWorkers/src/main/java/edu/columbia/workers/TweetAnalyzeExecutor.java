@@ -10,6 +10,7 @@ import com.columbia.cbd.utils.HttpRequestHandler;
 import com.google.gson.Gson;
 
 import edu.columbia.cbd.BootStrap;
+import edu.columbia.cbd.WorkerBootStrap;
 import edu.columbia.cbd.models.Constants;
 import edu.columbia.cbd.models.Sentiment;
 import edu.columbia.cbd.models.Sentiment.SentimentLabel;
@@ -63,7 +64,8 @@ public class TweetAnalyzeExecutor implements Runnable{
         System.out.println("Starting Tweet Analyze now!");
         BootStrap bootStrap = BootStrap.getInstance();
         bootStrap.startUp();
-
+        WorkerBootStrap workerBootStrap = WorkerBootStrap.getInstance();
+        workerBootStrap.startUp();
         SQSService sqsServiceIncoming = new SQSServiceImpl();
         SNSService snsService = new SNSServiceImpl();
         
