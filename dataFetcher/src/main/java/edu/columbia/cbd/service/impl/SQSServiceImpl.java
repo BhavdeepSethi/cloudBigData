@@ -8,10 +8,12 @@ import com.amazonaws.regions.Regions;
 import com.amazonaws.services.sqs.AmazonSQS;
 import com.amazonaws.services.sqs.AmazonSQSClient;
 import com.amazonaws.services.sqs.model.*;
+
 import edu.columbia.cbd.service.SQSService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by bhavdeepsethi on 11/26/14.
@@ -62,5 +64,12 @@ public class SQSServiceImpl implements SQSService{
         sqs.deleteMessage(deleteMessageRequest);
     }
 
+    public String getSQSArn(String queueUrl){
+    	ArrayList<String> attributeNames = new ArrayList<String>();
+    	attributeNames.add("All");
+    	GetQueueAttributesResult queueAttributes = sqs.getQueueAttributes(new GetQueueAttributesRequest(queueUrl ,attributeNames));
+		Map<String, String> attributes = queueAttributes.getAttributes();
+		return attributes.get("QueueArn");		
+    }
 
 }

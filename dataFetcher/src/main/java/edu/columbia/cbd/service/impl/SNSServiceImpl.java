@@ -11,6 +11,7 @@ import com.amazonaws.services.sns.AmazonSNSClient;
 import com.amazonaws.services.sns.model.CreateTopicRequest;
 import com.amazonaws.services.sns.model.CreateTopicResult;
 import com.amazonaws.services.sns.model.PublishRequest;
+import com.amazonaws.services.sns.model.SubscribeRequest;
 import com.amazonaws.services.sqs.model.Message;
 
 import edu.columbia.cbd.service.SNSService;
@@ -65,6 +66,11 @@ public class SNSServiceImpl implements SNSService {
 	public void deleteMessage(String topicUrl, String handleReceipt) {
 		// TODO Auto-generated method stub
 
+	}
+	
+	public void subscribeTopic(String topicArn, String protocol, String endPoint){
+		SubscribeRequest subRequest = new SubscribeRequest(topicArn,protocol,endPoint);
+		sns.subscribe(subRequest);
 	}
 
 }
