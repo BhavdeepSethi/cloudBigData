@@ -5,6 +5,8 @@ import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import com.amazonaws.services.sns.model.PublishRequest;
+import com.amazonaws.services.sns.model.PublishResult;
 import com.amazonaws.services.sqs.model.Message;
 import com.columbia.cbd.utils.HttpRequestHandler;
 import com.google.gson.Gson;
@@ -14,7 +16,9 @@ import edu.columbia.cbd.models.Constants;
 import edu.columbia.cbd.models.Sentiment;
 import edu.columbia.cbd.models.Sentiment.SentimentLabel;
 import edu.columbia.cbd.models.Tweet;
+import edu.columbia.cbd.service.SNSService;
 import edu.columbia.cbd.service.SQSService;
+import edu.columbia.cbd.service.impl.SNSServiceImpl;
 import edu.columbia.cbd.service.impl.SQSServiceImpl;
 
 /**
@@ -23,8 +27,7 @@ import edu.columbia.cbd.service.impl.SQSServiceImpl;
 public class TweetAnalyzeExecutor implements Runnable{
 	
 	private Tweet tweet;
-	private String SQSArn;
-	private String SNSArn;
+	private SNSService snsService;
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
@@ -34,10 +37,9 @@ public class TweetAnalyzeExecutor implements Runnable{
     
 	}
 	
-	public TweetAnalyzeExecutor(Tweet tweet, String SQSArn, String SNSArn){
+	public TweetAnalyzeExecutor(Tweet tweet,SNSService snsService){
 		this.tweet=tweet;
-		this.SNSArn=SNSArn;
-		this.SQSArn=SQSArn;
+		this.snsService = snsService;
 	}
 	
 	private void processTweet() {
@@ -55,7 +57,8 @@ public class TweetAnalyzeExecutor implements Runnable{
     		else
     			sentiment= new Sentiment(SentimentLabel.NEGATIVE, score);
     		tweet.setSentiment(sentiment);
-    		
+    		String tweetJson = new Gson().toJson(tweet);
+    		snsService.sendMessage(Constants.TWITTER_TOPIC_ARN, tweetJson);
     }
 
     public static void main(String[] args) {
@@ -64,7 +67,7 @@ public class TweetAnalyzeExecutor implements Runnable{
         bootStrap.startUp();
 
         SQSService sqsServiceIncoming = new SQSServiceImpl();
-        SQSService sqsServiceOutgoing = new SQSServiceImpl();
+        SNSService snsService = new SNSServiceImpl();
         
         ExecutorService executor = Executors.newFixedThreadPool(10);
         
@@ -78,7 +81,7 @@ public class TweetAnalyzeExecutor implements Runnable{
                 
                 Gson gson = new Gson();
                 Tweet tweet = gson.fromJson(text, Tweet.class);
-                Runnable TweetAnalyzeExecutor = new TweetAnalyzeExecutor(tweet,"","");
+                Runnable TweetAnalyzeExecutor = new TweetAnalyzeExecutor(tweet,snsService);
                 executor.execute(TweetAnalyzeExecutor);
                 
                 sqsServiceIncoming.deleteMessage(Constants.TWITTER_QUEUE_URL, msg.getReceiptHandle());

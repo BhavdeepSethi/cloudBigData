@@ -10,6 +10,8 @@ import com.amazonaws.regions.Regions;
 import com.amazonaws.services.sns.AmazonSNSClient;
 import com.amazonaws.services.sns.model.CreateTopicRequest;
 import com.amazonaws.services.sns.model.CreateTopicResult;
+import com.amazonaws.services.sns.model.PublishRequest;
+import com.amazonaws.services.sns.model.PublishResult;
 import com.amazonaws.services.sqs.model.Message;
 
 import edu.columbia.cbd.service.SNSService;
@@ -48,8 +50,9 @@ public class SNSServiceImpl implements SNSService {
 	}
 
 	@Override
-	public void sendMessage(String queueUrl, String msg) {
-		// TODO Auto-generated method stub
+	public void sendMessage(String topicArn, String msg) {
+		PublishRequest publishRequest = new PublishRequest(topicArn, msg);
+		sns.publish(publishRequest);
 
 	}
 
