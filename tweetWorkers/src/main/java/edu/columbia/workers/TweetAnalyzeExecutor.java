@@ -82,8 +82,7 @@ public class TweetAnalyzeExecutor implements Runnable{
                 Gson gson = new Gson();
                 Tweet tweet = gson.fromJson(text, Tweet.class);
                 Runnable TweetAnalyzeExecutor = new TweetAnalyzeExecutor(tweet,snsService);
-                executor.execute(TweetAnalyzeExecutor);
-                
+                executor.execute(TweetAnalyzeExecutor);   
                 sqsServiceIncoming.deleteMessage(Constants.TWITTER_QUEUE_URL, msg.getReceiptHandle());
             }
             executor.shutdown();

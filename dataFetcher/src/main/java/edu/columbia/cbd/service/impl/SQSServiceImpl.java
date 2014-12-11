@@ -3,15 +3,18 @@ package edu.columbia.cbd.service.impl;
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.PropertiesCredentials;
+import com.amazonaws.auth.policy.Policy;
 import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.sqs.AmazonSQS;
 import com.amazonaws.services.sqs.AmazonSQSClient;
 import com.amazonaws.services.sqs.model.*;
 
+import edu.columbia.cbd.models.Constants;
 import edu.columbia.cbd.service.SQSService;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -65,11 +68,24 @@ public class SQSServiceImpl implements SQSService{
     }
 
     public String getSQSArn(String queueUrl){
-    	ArrayList<String> attributeNames = new ArrayList<String>();
+    	GetQueueAttributesRequest queueAttributesRequest = new GetQueueAttributesRequest(queueUrl)
+    	 .withAttributeNames("All");
+    	GetQueueAttributesResult queueAttributesResult = sqs.getQueueAttributes(queueAttributesRequest);
+    	Map<String, String> sqsAttributeMap = queueAttributesResult.getAttributes();
+    	return sqsAttributeMap.get("QueueArn");
+    	/*ArrayList<String> attributeNames = new ArrayList<String>();
     	attributeNames.add("All");
     	GetQueueAttributesResult queueAttributes = sqs.getQueueAttributes(new GetQueueAttributesRequest(queueUrl ,attributeNames));
 		Map<String, String> attributes = queueAttributes.getAttributes();
-		return attributes.get("QueueArn");		
+		return attributes.get("QueueArn");	*/	
+    }
+    
+    public void setAttribute(Policy policy,String url){
+    	HashMap<String, String> attributes = new HashMap<String, String>();
+		attributes.put("Policy", policy.toJson());
+		SetQueueAttributesRequest request = new SetQueueAttributesRequest(url, attributes);
+		sqs.setQueueAttributes(request);
+		
     }
 
 }

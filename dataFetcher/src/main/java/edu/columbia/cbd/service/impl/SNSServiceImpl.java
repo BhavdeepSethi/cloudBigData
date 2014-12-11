@@ -68,9 +68,9 @@ public class SNSServiceImpl implements SNSService {
 
 	}
 	
-	public void subscribeTopic(String topicArn, String protocol, String endPoint){
+	public String subscribeTopic(String topicArn, String protocol, String endPoint){
 		SubscribeRequest subRequest = new SubscribeRequest(topicArn,protocol,endPoint);
-		sns.subscribe(subRequest);
+		return sns.subscribe(subRequest).getSubscriptionArn();
 	}
 
 }
