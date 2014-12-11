@@ -68,7 +68,7 @@ public class TweetAnalyzeExecutor implements Runnable{
         workerBootStrap.startUp();
         SQSService sqsServiceIncoming = new SQSServiceImpl();
         SNSService snsService = new SNSServiceImpl();
-        
+        Gson gson = new Gson();
         ExecutorService executor = Executors.newFixedThreadPool(10);
         
         while(true) {
@@ -79,7 +79,7 @@ public class TweetAnalyzeExecutor implements Runnable{
                 
                 //Convert to thread pool and Do Alchemy Work Here
                 
-                Gson gson = new Gson();
+               
                 Tweet tweet = gson.fromJson(text, Tweet.class);
                 Runnable TweetAnalyzeExecutor = new TweetAnalyzeExecutor(tweet,snsService);
                 executor.execute(TweetAnalyzeExecutor);   
