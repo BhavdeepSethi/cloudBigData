@@ -10,7 +10,6 @@ import com.columbia.cbd.utils.HttpRequestHandler;
 import com.google.gson.Gson;
 
 import edu.columbia.cbd.BootStrap;
-import edu.columbia.cbd.WorkerBootStrap;
 import edu.columbia.cbd.models.Constants;
 import edu.columbia.cbd.models.Sentiment;
 import edu.columbia.cbd.models.Sentiment.SentimentLabel;
@@ -20,9 +19,10 @@ import edu.columbia.cbd.service.SQSService;
 import edu.columbia.cbd.service.impl.SNSServiceImpl;
 import edu.columbia.cbd.service.impl.SQSServiceImpl;
 
-/**
- * Created by bhavdeepsethi on 10/30/14.
+/*
+Author: Diwakar Mahajan (@diwakar21)
  */
+
 public class TweetAnalyzeExecutor implements Runnable{
 	
 	private Tweet tweet;
@@ -78,11 +78,10 @@ public class TweetAnalyzeExecutor implements Runnable{
                 String text = msg.getBody();
                 
                 //Convert to thread pool and Do Alchemy Work Here
-                
-               
                 Tweet tweet = gson.fromJson(text, Tweet.class);
                 Runnable TweetAnalyzeExecutor = new TweetAnalyzeExecutor(tweet,snsService);
-                executor.execute(TweetAnalyzeExecutor);   
+                executor.execute(TweetAnalyzeExecutor);
+
                 sqsServiceIncoming.deleteMessage(Constants.TWITTER_QUEUE_URL, msg.getReceiptHandle());
             }
             executor.shutdown();

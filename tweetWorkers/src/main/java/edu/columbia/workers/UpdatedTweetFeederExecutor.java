@@ -1,26 +1,21 @@
 package edu.columbia.workers;
 
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import com.amazonaws.services.sqs.model.Message;
-import com.columbia.cbd.utils.HttpRequestHandler;
 import com.google.gson.Gson;
-
-import edu.columbia.cbd.BootStrap;
-import edu.columbia.cbd.WorkerBootStrap;
 import edu.columbia.cbd.models.Constants;
-import edu.columbia.cbd.models.Sentiment;
 import edu.columbia.cbd.models.Tweet;
-import edu.columbia.cbd.models.Sentiment.SentimentLabel;
 import edu.columbia.cbd.service.MongoService;
-import edu.columbia.cbd.service.SNSService;
 import edu.columbia.cbd.service.SQSService;
 import edu.columbia.cbd.service.impl.MongoServiceImpl;
-import edu.columbia.cbd.service.impl.SNSServiceImpl;
 import edu.columbia.cbd.service.impl.SQSServiceImpl;
+
+/*
+Author: Diwakar Mahajan (@diwakar21)
+ */
 
 public class UpdatedTweetFeederExecutor implements Runnable{
 	private Tweet tweet;
@@ -36,7 +31,7 @@ public class UpdatedTweetFeederExecutor implements Runnable{
 	}
 	public UpdatedTweetFeederExecutor(Tweet tweet, MongoService mongoService){
 		this.tweet=tweet;
-		
+        this.mongoService = mongoService;
 	}
 
 	private void updateMongo() {
@@ -61,7 +56,7 @@ public class UpdatedTweetFeederExecutor implements Runnable{
                 //Convert to thread pool 
                
                 Tweet tweet = gson.fromJson(text, Tweet.class);
-                Runnable UpdatedTweetFeederExecutor = new UpdatedTweetFeederExecutor(tweet,mongoService);
+                Runnable UpdatedTweetFeederExecutor = new UpdatedTweetFeederExecutor(tweet , mongoService);
                 executor.execute(UpdatedTweetFeederExecutor);   
                 sqsServiceIncoming.deleteMessage(Constants.TWITTER_OUTGOING_QUEUE_URL, msg.getReceiptHandle());
             }
