@@ -5,6 +5,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import com.amazonaws.services.sqs.model.Message;
+import com.amazonaws.util.json.JSONException;
+import com.amazonaws.util.json.JSONObject;
 import com.google.gson.Gson;
 import edu.columbia.cbd.models.Constants;
 import edu.columbia.cbd.models.Tweet;
@@ -20,13 +22,14 @@ Author: Diwakar Mahajan (@diwakar21)
 public class UpdatedTweetFeederExecutor implements Runnable{
 	private Tweet tweet;
 	private MongoService mongoService;
+    private static int WAIT_TIME = 1000;
 
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
-		System.out.println(Thread.currentThread().getName()+" Start. Thread");
+		//System.out.println(Thread.currentThread().getName()+" Start. Thread");
 		updateMongo();
-        System.out.println(Thread.currentThread().getName()+" End.");
+        //System.out.println(Thread.currentThread().getName()+" End.");
     
 	}
 	public UpdatedTweetFeederExecutor(Tweet tweet, MongoService mongoService){
@@ -35,37 +38,47 @@ public class UpdatedTweetFeederExecutor implements Runnable{
 	}
 
 	private void updateMongo() {
-    	mongoService.updateTweet(tweet);
+        mongoService.updateTweet(tweet);
 	}
 	
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException, JSONException {
         System.out.println("Starting Tweet Updation now!");
         WorkerBootStrap workerBootStrap = WorkerBootStrap.getInstance();
         workerBootStrap.startUp();
         SQSService sqsServiceIncoming = new SQSServiceImpl();
         MongoService mongoService = new MongoServiceImpl();
         Gson gson = new Gson();
+
         ExecutorService executor = Executors.newFixedThreadPool(10);
         
         while(true) {
+            boolean worked = false;
             List<Message> msgList = sqsServiceIncoming.receiveMessage(Constants.TWITTER_OUTGOING_QUEUE_URL);
             for (Message msg : msgList) {
-                System.out.println("Tweet caught:"+msg.getBody());
-                String text = msg.getBody();
+                worked = true;
+                WAIT_TIME = 1000;
+
+                JSONObject json = new JSONObject(msg.getBody());
+
+                String text = json.getString("Message");
                 
                 //Convert to thread pool 
                
                 Tweet tweet = gson.fromJson(text, Tweet.class);
                 Runnable UpdatedTweetFeederExecutor = new UpdatedTweetFeederExecutor(tweet , mongoService);
-                executor.execute(UpdatedTweetFeederExecutor);   
+                executor.execute(UpdatedTweetFeederExecutor);
                 sqsServiceIncoming.deleteMessage(Constants.TWITTER_OUTGOING_QUEUE_URL, msg.getReceiptHandle());
             }
-            executor.shutdown();
-            while (!executor.isTerminated()) {
-            }
-            System.out.println("Finished all threads");
-        }
+            if(!worked){
+                System.out.println("Waiting for "+WAIT_TIME/1000 +" seconds");
+                Thread.sleep(WAIT_TIME);
+                WAIT_TIME = WAIT_TIME * 2;
+                if(WAIT_TIME > 64000){
+                    WAIT_TIME =  64000;
+                }
 
+            }
+        }
 
     }
 }

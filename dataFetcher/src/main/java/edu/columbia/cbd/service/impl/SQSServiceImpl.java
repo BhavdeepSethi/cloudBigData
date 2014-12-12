@@ -80,7 +80,7 @@ public class SQSServiceImpl implements SQSService{
 		return attributes.get("QueueArn");	*/	
     }
     
-    public void setAttribute(Policy policy,String url){
+    public void setAttribute(Policy policy, String url){
     	HashMap<String, String> attributes = new HashMap<String, String>();
 		attributes.put("Policy", policy.toJson());
 		SetQueueAttributesRequest request = new SetQueueAttributesRequest(url, attributes);

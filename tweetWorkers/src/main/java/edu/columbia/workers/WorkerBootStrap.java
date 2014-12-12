@@ -11,9 +11,7 @@ import edu.columbia.cbd.models.Constants;
 import edu.columbia.cbd.service.impl.SNSServiceImpl;
 import edu.columbia.cbd.service.impl.SQSServiceImpl;
 
-/*
-Author: Diwakar Mahajan (@diwakar21)
- */
+
 public class WorkerBootStrap {
 	private static WorkerBootStrap instance = null;
 
@@ -36,27 +34,24 @@ public class WorkerBootStrap {
 		Constants.TWITTER_OUTGOING_QUEUE_URL =  sqsServiceOutgoing.createQueue(Constants.TWITTER_OUTGOING_QUEUE_NAME);
 		//getting queue arn
 		Constants.TWITTER_OUTGOING_QUEUE_ARN = sqsServiceOutgoing.getSQSArn(Constants.TWITTER_OUTGOING_QUEUE_URL);
-		
+
+        Statement statement = new Statement(Effect.Allow)
+                .withActions(SQSActions.SendMessage)
+                .withPrincipals(new Principal("*"))
+                .withConditions(ConditionFactory.newSourceArnCondition(Constants.TWITTER_TOPIC_ARN))
+                .withResources(new Resource(Constants.TWITTER_OUTGOING_QUEUE_ARN));
+
+        Policy policy = new Policy("MySQSPolicy001")
+                .withStatements(statement);
+
+
+        sqsServiceOutgoing.setAttribute(policy, Constants.TWITTER_OUTGOING_QUEUE_URL);
+        //Give users permissions to the appropriate topic and queue actions
+
 		//subscribe sqs 
 		Constants.TWITTER_SQS_SUBSCRIPTION_ARN=snsService.subscribeTopic(Constants.TWITTER_TOPIC_ARN, "sqs", Constants.TWITTER_OUTGOING_QUEUE_ARN);
 				
 		//Give permission to the Amazon SNS topic to send messages to the Amazon SQS queue
-		
-		
-		
-		Statement statement = new Statement(Effect.Allow)
-		 .withActions(SQSActions.SendMessage)
-		 .withPrincipals(new Principal("*"))
-		 .withConditions(ConditionFactory.newSourceArnCondition(Constants.TWITTER_TOPIC_NAME))
-		 .withResources(new Resource(Constants.TWITTER_OUTGOING_QUEUE_ARN));
-		Policy policy = new Policy("SubscriptionPermission")
-		 .withStatements(statement);
-
-		//An then set the queue attribute (the addPermission API is mainly for adding other AWS Account IDs)
-
-		
-		sqsServiceOutgoing.setAttribute(policy, Constants.TWITTER_OUTGOING_QUEUE_URL);
-		//Give users permissions to the appropriate topic and queue actions
 
     }
 

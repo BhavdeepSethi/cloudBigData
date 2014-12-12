@@ -23,7 +23,7 @@ public class SNSServiceImpl implements SNSService {
         AWSCredentials credentials = null;
         try {
             credentials = new PropertiesCredentials(
-                    SQSServiceImpl.class.getClassLoader().getResourceAsStream("AwsCredentials.properties"));
+                    SNSServiceImpl.class.getClassLoader().getResourceAsStream("AwsCredentials.properties"));
 
         } catch (Exception e) {
             throw new AmazonClientException(

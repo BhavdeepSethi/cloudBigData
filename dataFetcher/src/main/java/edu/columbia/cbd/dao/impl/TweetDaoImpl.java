@@ -73,7 +73,7 @@ public class TweetDaoImpl implements TweetDao {
     public void updateTweet(Tweet tweet){
         DB db = mongoClient.getDB(DATABASE_NAME);
         DBCollection collection = db.getCollection(COLLECTION_NAME);
-        BasicDBObject searchQuery = new BasicDBObject("id", tweet.getId());
+        BasicDBObject searchQuery = new BasicDBObject("_id", new ObjectId(tweet.getId()));
         BasicDBObject updateValues = new BasicDBObject();
         updateValues.put("sentiment", tweet.getSentiment().getSentimentLabel().name());
         updateValues.put("score", tweet.getSentiment().getScore());
